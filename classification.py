@@ -28,10 +28,16 @@ df.info()
 df.describe()
 
 # Obtención de valores
+X = df.iloc[:, :]
+y = df.iloc[:, -1]
 
+print('x')
+print(X)
+print('y')
+print(y)
 
 ## Separación de datos de entrenamieno y prueba
 from sklearn.model_selection import train_test_split
-# X_entreno, X_prueba, y_entreno, y_prueba = train_test_split(X, y, test_size = 0.2, random_state = 100)
+X_entreno, X_prueba, y_entreno, y_prueba = train_test_split(X, y, test_size = 0.2, random_state = 100)
 
 # balanceo de datos
