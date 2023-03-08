@@ -19,6 +19,10 @@ df["phishing"] = df["phishing"].astype('int64')
 to_categoric = ["url"]
 df = clean(df, method = 'dtypes', columns = to_categoric, dtype='category')
 
+
+# eliminar la columna legitamate para no tener información repetida
+df = df.drop('legitimate', axis = 1)
+
 df.info()
 
 df.describe()
