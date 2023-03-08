@@ -28,7 +28,7 @@ df.info()
 df.describe()
 
 # Obtención de valores
-X = df.iloc[:, :]
+X = df.iloc[:, :-1]
 y = df.iloc[:, -1]
 
 print('x')
