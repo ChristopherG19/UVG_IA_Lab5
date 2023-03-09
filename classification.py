@@ -12,20 +12,13 @@ df = pd.read_csv('./dataset_phishing.csv')
 data_encoded = pd.get_dummies(df, columns=['status'], prefix='', prefix_sep='')
 df = data_encoded
 
-df.info()
-
 df["legitimate"] = df["legitimate"].astype('int64')
 df["phishing"] = df["phishing"].astype('int64')
 to_categoric = ["url"]
 df = clean(df, method = 'dtypes', columns = to_categoric, dtype='category')
 
-
 # eliminar la columna legitamate para no tener información repetida
 df = df.drop('legitimate', axis = 1)
-
-df.info()
-
-df.describe()
 
 # Obtención de valores
 X = df.iloc[:, 2:-1].values
@@ -63,5 +56,21 @@ for k in ks:
         if (acc > best[1]):
             best = (k, acc)
 
-# obtener mejores accuracies
-print ('KNN Accuracy y mejor knn: ', best)
+# Task 1.1 impresión resultados
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+
+# obtener mejores accuracies sin librerias
+print('KNN Accuracy y mejor knn: ', best)
+print("\nMatrix de confusión: ")
+print(confusion_matrix(y_prueba, y_pred))
+print(classification_report(y_prueba, y_pred))
+print()
+
+# Con librerías
+knn = KNeighborsClassifier(n_neighbors = 5)
+knn.fit(X_entreno, y_entreno)
+pred = knn.predict(X_prueba)
+print("Matrix de confusión: ")
+print(confusion_matrix(y_prueba, pred))
+print(classification_report(y_prueba, pred))
