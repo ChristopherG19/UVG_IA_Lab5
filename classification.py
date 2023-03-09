@@ -28,8 +28,8 @@ df.info()
 df.describe()
 
 # Obtención de valores
-X = df.iloc[:, :-1]
-y = df.iloc[:, -1]
+X = df.iloc[:, 2:-1].values
+y = df.iloc[:, -1].values
 
 print('x')
 print(X)
@@ -41,3 +41,23 @@ from sklearn.model_selection import train_test_split
 X_entreno, X_prueba, y_entreno, y_prueba = train_test_split(X, y, test_size = 0.2, random_state = 100)
 
 # balanceo de datos
+
+# Task 1.1
+from KNN import *
+
+knn = KNN()
+knn.fit(X_entreno, y_entreno)
+y_pred = knn.predict(X_prueba)
+
+def accuracy(y_true, y_pred):
+    accuracy = np.sum(y_true==y_pred) / len(y_true)
+    return accuracy
+
+
+
+# ks = range(1, 30)
+# for k in ks:
+#     knn = KNN(k=k)
+#     knn.fit(X_entreno, y_entreno)
+
+print("SVM Accuracy: ", accuracy(y_prueba, y_pred))
