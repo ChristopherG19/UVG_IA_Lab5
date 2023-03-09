@@ -33,7 +33,41 @@ print(y)
 from sklearn.model_selection import train_test_split
 X_entreno, X_prueba, y_entreno, y_prueba = train_test_split(X, y, test_size = 0.2, random_state = 100)
 
-# balanceo de datos
+# Task 1.2 Support Vector Machines
+from SVM import *
+clf = SVM(n_iters=1000)
+clf.fit(X_entreno, y_entreno)
+predictions = clf.predict(X_prueba)
+
+def accuracy(y_true, y_pred):
+    accuracy = np.sum(y_true==y_pred) / len(y_true)
+    return accuracy
+
+# Task 1.2 impresión resultados
+from sklearn.svm import SVC
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+
+# Sin librerías
+print("SVM Accuracy: ", accuracy(y_prueba, predictions))
+mat_conf = confusion_matrix(y_prueba, predictions)
+print("\nMatriz de confusión: ")
+print(mat_conf)
+print("\nReporte de clasificación")
+print(classification_report(y_prueba, predictions))
+print()
+
+# Con librerías
+clasificador = SVC(kernel = 'rbf', random_state = 2)
+clasificador.fit(X_entreno, y_entreno)
+y_pred = clasificador.predict(X_prueba)
+np.concatenate((y_pred.reshape(len(y_pred),1), y_prueba.reshape(len(y_prueba),1)),1)
+mat_conf = confusion_matrix(y_prueba, y_pred)
+print("\nMatriz de confusión: ")
+print(mat_conf)
+print("\nReporte de clasificación")
+print(classification_report(y_prueba, y_pred))
+print()
+
 
 def accuracy(y_true, y_pred):
     accuracy = np.sum(y_true==y_pred) / len(y_true)
