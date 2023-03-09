@@ -1,13 +1,15 @@
 import pandas as pd
 import numpy as np
 
+# basado en: https://towardsdatascience.com/implementing-svm-from-scratch-784e4ad0bc6a
+
 class SVM:
-    def __init__(self, learning_rate=1e-3, lambda_param=1e-2, n_iters=1000):
+    def __init__(self, learning_rate=1e-3, param_lambda=1e-2, n_iters=1000):
         self.lr = learning_rate
-        self.lambda_param = lambda_param
+        self.param_lambda = param_lambda
         self.n_iters = n_iters
-        self.w = None
-        self.b = None
+        self.w = None # Se obtiene después
+        self.b = None # Se obttiene después
 
     def _init_weights_bias(self, X):
         n_features = X.shape[1]
@@ -18,16 +20,16 @@ class SVM:
         return np.where(y <= 0, -1, 1)
 
     def _satisfy_constraint(self, x, idx):
-        linear_model = np.dot(x, self.w) + self.b 
-        return self.cls_map[idx] * linear_model >= 1
+        modelo_lineal = np.dot(x, self.w) + self.b 
+        return self.cls_map[idx] * modelo_lineal >= 1
     
     def _get_gradients(self, constrain, x, idx):
         if constrain:
-            dw = self.lambda_param * self.w
+            dw = self.param_lambda * self.w
             db = 0
             return dw, db
         
-        dw = self.lambda_param * self.w - np.dot(self.cls_map[idx], x)
+        dw = self.param_lambda * self.w - np.dot(self.cls_map[idx], x)
         db = - self.cls_map[idx]
         return dw, db
     
@@ -35,6 +37,7 @@ class SVM:
         self.w -= self.lr * dw
         self.b -= self.lr * db
     
+    # Método fit para que el modelo, dado un set de datos X y y, genere el modelo SVM
     def fit(self, X, y):
         self._init_weights_bias(X)
         self.cls_map = self._get_cls_map(y)
@@ -45,31 +48,9 @@ class SVM:
                 dw, db = self._get_gradients(constrain, x, idx)
                 self._update_weights_bias(dw, db)
     
+    # Dado los valores, predecir 'y'
     def predict(self, X):
-        estimate = np.dot(X, self.w) + self.b
-        prediction = np.sign(estimate)
-        return np.where(prediction == -1, 0, 1)
+        estimacion = np.dot(X, self.w) + self.b
+        prediccion = np.sign(estimacion)
+        return np.where(prediccion == -1, 0, 1)
     
-# from sklearn.datasets import make_blobs
-# from sklearn.model_selection import train_test_split
-
-# X, y = make_blobs(
-#     n_samples=250, n_features=3, centers=2, cluster_std=1.05, random_state=1
-# )
-
-# print('\nX')
-# print(X)
-# print('\ny')
-# print(y)
-
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, shuffle=True, random_state=1)
-
-# clf = SVM(n_iters=1000)
-# clf.fit(X_train, y_train)
-# predictions = clf.predict(X_test)
-
-# def accuracy(y_true, y_pred):
-#     accuracy = np.sum(y_true==y_pred) / len(y_true)
-#     return accuracy
-
-# print("SVM Accuracy: ", accuracy(y_test, predictions))
