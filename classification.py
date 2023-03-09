@@ -42,22 +42,26 @@ X_entreno, X_prueba, y_entreno, y_prueba = train_test_split(X, y, test_size = 0.
 
 # balanceo de datos
 
-# Task 1.1
-from KNN import *
-
-knn = KNN()
-knn.fit(X_entreno, y_entreno)
-y_pred = knn.predict(X_prueba)
-
 def accuracy(y_true, y_pred):
     accuracy = np.sum(y_true==y_pred) / len(y_true)
     return accuracy
 
+# Task 1.1
+from KNN import *
 
+ks = range(1, 10)
+accs = [] # Todas las accuracies
+best = (0, 0) # El k con mejor accuracie
+for k in ks:
+    if k % 2 != 0:
+        # de esta manera solo obtenemos los números impares
+        knn = KNN(k=k)
+        knn.fit(X_entreno, y_entreno)
+        y_pred = knn.predict(X_prueba)
+        acc = accuracy(y_prueba, y_pred)
+        accs.append(acc)
+        if (acc > best[1]):
+            best = (k, acc)
 
-# ks = range(1, 30)
-# for k in ks:
-#     knn = KNN(k=k)
-#     knn.fit(X_entreno, y_entreno)
-
-print("SVM Accuracy: ", accuracy(y_prueba, y_pred))
+# obtener mejores accuracies
+print ('KNN Accuracy y mejor knn: ', best)
